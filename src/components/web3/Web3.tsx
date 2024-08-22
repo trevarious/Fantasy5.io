@@ -128,7 +128,6 @@ export const Web3Provider: React.FC<{ children: ReactNode }> = ({ children }) =>
         </Web3Context.Provider>
     );
 };
-
 export const useWeb3 = () => {
     const context = React.useContext(Web3Context);
     if (context === undefined) {
