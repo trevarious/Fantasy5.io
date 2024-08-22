@@ -1,0 +1,227 @@
+.nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 75px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #020617;
+}
+
+.leftNav {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.title {
+    font-size: calc(2vw + 1.5rem);
+    color: #ef4444;
+
+}
+
+.link {
+    padding: 0 5px;
+}
+
+.sepoliaImg {
+    visibility: hidden;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-left: 5px;
+}
+
+.addressContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+
+}
+
+.addressContainer:hover .sepoliaImg {
+    visibility: visible;
+    opacity: 1;
+}
+
+.truncatedAddress {
+    color: #4ade80;
+}
+
+
+.rightNav {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    visibility: hidden;
+}
+
+.rightNavItem {
+    color: #F5F5F5;
+    width: 150px;
+    /* Adjust values based on your design */
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    user-select: none;
+    font-size: 1rem;
+    /* Adjust these values */
+    font-weight: 700;
+
+}
+
+.draw {
+    position: absolute;
+    transform: translateX(-250px);
+    font-size: 2rem;
+}
+
+
+.ethImg {
+    width: clamp(10px, 20px, 25px);
+    margin-left: 2px;
+    pointer-events: none;
+    user-select: none;
+}
+
+
+.lotteryStateOpen {
+    color: #32CD32;
+    /* or any color you prefer for OPEN */
+}
+
+.lotteryStateCalculating {
+    color: orange;
+    /* or any color you prefer for CALCULATING */
+}
+
+.lotteryStateClosed {
+    color: red;
+    /* or any color you prefer for CLOSED */
+}
+
+.previousDraw {
+    display: flex;
+    flex-direction: row;
+    width: 100px;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+}
+
+.last {
+    flex-direction: column !important;
+    align-items: flex-start;
+}
+
+
+.rightNavSmallScreen {
+    display: none;
+}
+
+.rightNavSmallScreen.show {
+    display: block;
+}
+
+.menuButton {
+    display: none;
+}
+
+.previousWinningNumbers {
+    margin-right: 5px;
+}
+
+.previousWinningNumbers:first-child {
+    margin-left: 5px;
+}
+
+.previousDraw {
+    width: 300px;
+}
+
+
+@media (max-width: 960px) {
+    .rightNav {
+        display: none;
+    }
+
+    .menuButton {
+        display: block;
+        background: #022c22;
+        color: #a7f3d0;
+        border: 1px solid #34d3997b;
+
+    }
+
+    .rightNavSmallScreen {
+        display: none;
+    }
+
+    .rightNavSmallScreen.show {
+        position: absolute;
+        background-color: black;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 90%;
+        height: 90vh;
+        top: 10%;
+        right: 10%;
+        bottom: 10%;
+        left: 5%;
+        border: 1px solid gold;
+        z-index: 100;
+
+    }
+
+    .smallScreenTitle {
+        position: absolute;
+        top: 5%;
+        margin-bottom: 15px;
+        border: 1px solid transparent;
+        border-bottom-color: #32CD32;
+    }
+
+    .rightNavItem {
+        text-align: left;
+        height: 50px;
+        width: 100%;
+        justify-content: center;
+        font-size: 2rem;
+        border: 10px solid transparent;
+        border-left-color: #32CD32;
+        border-right-color: #32CD32;
+    }
+
+    .previousDraw {
+        width: 100%;
+    }
+
+    .last {
+        width: 100%;
+    }
+
+
+    .previousWinningNumbers {
+        margin-right: 5px;
+    }
+
+    .previousWinningNumbers:first-child {
+        margin-left: 5px;
+    }
+
+    .ethImg {
+        width: 25px;
+    }
+}

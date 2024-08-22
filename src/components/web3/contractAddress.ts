@@ -1,0 +1,1 @@
+export let contractAddress: string = '0x130Ab3d4c72536c02570EB426e41D674BFa42dAD'

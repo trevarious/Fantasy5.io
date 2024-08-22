@@ -1,0 +1,148 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+
+}
+
+.ticket {
+    width: 300px;
+    padding: 15px;
+    margin: 0 auto;
+    text-align: center;
+    background: #fde047;
+    user-select: none;
+}
+
+.title {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 130%;
+    right: 15%;
+    height: 50px;
+    background-color: #991b1b;
+    margin-bottom: 2rem;
+}
+
+.numbersGridContainer {
+    padding: 15px;
+}
+
+.numbersgrid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: .5rem;
+    margin-bottom: 1rem;
+}
+
+.numberButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    font-size: 1.9rem;
+    font-weight: 700;
+    font-family: "Libre Baskerville";
+    background-color: #fef3c7;
+    color: #047857;
+    border: 1px solid #ebebeb;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.selected {
+
+    background-color: #4caf50;
+    color: #696969;
+}
+
+.selectedNumbers {
+    margin-top: 20px;
+    background: #fef3c7;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.selectedNumbersTitle {
+    color: #696969;
+    font-size: 3rem;
+    font-weight: 400;
+}
+
+.numbersList {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.6rem;
+    font-weight: 700;
+    font-family: "Libre Baskerville";
+    min-height: 75px;
+    color: #047857;
+}
+
+.numbersList::before {
+    content: "";
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.submitTicketButton:disabled {
+    opacity: .25;
+}
+
+.buttonsContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 50px;
+    margin-top: 1.5rem;
+}
+
+.submitTicketButton {
+    background-color: #065f46;
+    color: white;
+    font-weight: 700;
+    padding: 5px;
+    transition: opacity .15s ease;
+    cursor: pointer;
+}
+
+.spanSubmitTicketButton {
+    font-weight: 400;
+    cursor: pointer;
+    margin-left: 2.5px;
+}
+
+.ether {
+    position: relative;
+    display: inline;
+    width: 10px;
+    margin-bottom: 5px;
+    margin-left: 2.5px;
+}
+
+.quickPickButton {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background-color: black;
+}
+
+.quickPickButton::before {
+    position: absolute;
+    content: "";
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    background-color: #065f4681;
+    transform: translateX(-25px);
+
+}
