@@ -14,14 +14,14 @@ enum LotteryState {
 
 const Nav: React.FC = () => {
     const { userAccount, initializeWeb3, contract, web3 } = useWeb3();
-    const [hasCountdownStarted, setHasCountDownStarted] = useState<any>(null);
+    // const [hasCountdownStarted, setHasCountDownStarted] = useState<any>(null);
     const [countdownTime, setCountdownTime] = useState<any>(null);
     const [entranceFee, setEntranceFee] = useState<any>(null);
     const [lotteryState, setLotteryState] = useState<any>(null);
     const [numberOfPlayers, setNumberOfPlayers] = useState<any>(null);
     const [previousDraw, setPreviousDraw] = useState<any>(null);
     const [jackpotAmount, setJackpotAmount] = useState<any>(null);
-    const [lastJackpotPaidAmount, setLastJackpotPaidAmount] = useState<any>(null);
+    // const [lastJackpotPaidAmount, setLastJackpotPaidAmount] = useState<any>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false); // State to manage menu visibility
 
     const rightNavRef = useRef<HTMLDivElement>(null);
@@ -72,8 +72,8 @@ const Nav: React.FC = () => {
                 setEntranceFee(web3?.utils.fromWei(returns[3], "ether"));
                 setPreviousDraw(returns[6] ? returns[6].map(Number) : null);
                 setJackpotAmount(jackpotAmounts);
-                setLastJackpotPaidAmount(returns[8] ? returns[8] : null);
-                setHasCountDownStarted(returns[9] ? returns[9] : null);
+                // setLastJackpotPaidAmount(returns[8] ? returns[8] : null);
+                // setHasCountDownStarted(returns[9] ? returns[9] : null);
 
                 fetchCountdownTime();
             } else {
