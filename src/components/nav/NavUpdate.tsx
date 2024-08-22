@@ -131,7 +131,7 @@ const Nav: React.FC = () => {
                     {userAccount?.address === '0xa5AEB29CFC2f648525e0B064956A6b24458BD5B8' && (
                         <button onClick={eject}>eject</button>
                     )}
-                    <a className={`${styles.title} ${styles.link}`}>Fantasty5</a>
+                    <a className={`${styles.title} ${styles.link}`}><span className={styles.titleSpan}>meta</span>Fantasty5</a>
                     {!userAccount ? (
                         <button onClick={initializeWeb3} className={`${styles.contractAddress} ${styles.link}`}>
                             Connect Wallet

@@ -21,12 +21,28 @@
 
 .title {
     font-size: calc(2vw + 1.5rem);
-    color: #ef4444;
+    background: linear-gradient(to left, #32CD32 0%, #ef4444 25%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 
+}
+
+.titleSpan {
+    font-size: calc(2vw + 1rem);
+    background: linear-gradient(to right, #32CD32 75%, #ef4444);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
 .link {
     padding: 0 5px;
+}
+
+.contractAddress {
+    color: #ffffff;
+    background-color: rgba(12, 163, 174, 0.291);
 }
 
 .sepoliaImg {
