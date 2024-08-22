@@ -114,13 +114,13 @@ const Nav: React.FC = () => {
             };
         }
     }, [contract]);
-    const eject = async () => {
-        try {
-            await contract.methods.withdrawContractBalance().send({ from: userAccount?.address });
-        } catch (error) {
-            console.error(error);
-        }
-    }
+    // const eject = async () => {
+    //     try {
+    //         await contract.methods.withdrawContractBalance().send({ from: userAccount?.address });
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // }
     return (
         <nav className={styles.nav}>
             <div className={styles.leftNav}>
