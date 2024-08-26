@@ -26,7 +26,7 @@ const Nav: React.FC = () => {
         jackpotAmount,
         intervalForDraw,
         // previousDraw,
-        withdrawContractBalance,
+        // withdrawContractBalance,
     } = useAppContext();
     const [isMenuOpen, setIsMenuOpen] = useState(false); // State to manage menu visibility
 
