@@ -9,6 +9,7 @@
     align-items: center;
     justify-content: space-between;
     background-color: #020617;
+    user-select: none;
 }
 
 .leftNav {
@@ -21,7 +22,7 @@
 
 .title {
     font-size: calc(2vw + 1.5rem);
-    background: linear-gradient(to left, #32CD32 0%, #ef4444 25%);
+    background: linear-gradient(to left, #a1a1aa 0%, #a8a29e 25%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -30,7 +31,7 @@
 
 .titleSpan {
     font-size: calc(2vw + 1rem);
-    background: linear-gradient(to right, #32CD32 75%, #ef4444);
+    background: linear-gradient(to right, #a8a29e 75%, #a1a1aa);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -47,8 +48,8 @@
 
 .sepoliaImg {
     visibility: hidden;
-    width: 20px;
-    height: 20px;
+    width: 1.5rem;
+    height: 1.5rem;
     border-radius: 50%;
     margin-left: 5px;
 }
@@ -73,11 +74,13 @@
 
 .rightNav {
     flex: 1;
+    min-width: 1000px;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    visibility: hidden;
+    visibility: visible;
+
 }
 
 .rightNavItem {
@@ -96,15 +99,9 @@
 
 }
 
-.draw {
-    position: absolute;
-    transform: translateX(-250px);
-    font-size: 2rem;
-}
-
 
 .ethImg {
-    width: clamp(10px, 20px, 25px);
+    width: clamp(1rem, 1.2rem, 1.7rem);
     margin-left: 2px;
     pointer-events: none;
     user-select: none;
@@ -113,26 +110,36 @@
 
 .lotteryStateOpen {
     color: #32CD32;
+    font-size: 1.6rem;
     /* or any color you prefer for OPEN */
 }
 
 .lotteryStateCalculating {
     color: orange;
+    font-size: 1.6rem;
     /* or any color you prefer for CALCULATING */
 }
 
 .lotteryStateClosed {
     color: red;
+    font-size: 1.6rem;
     /* or any color you prefer for CLOSED */
+}
+
+.draw {
+    position: relative;
+    width: 450px;
+    text-align: center;
 }
 
 .previousDraw {
     display: flex;
     flex-direction: row;
-    width: 100px;
+    width: 100%;
     align-items: center;
     justify-content: center;
     list-style: none;
+
 }
 
 .last {
@@ -140,6 +147,29 @@
     align-items: flex-start;
 }
 
+.lastText {
+    margin-right: 6px;
+}
+
+.previousWinningNumbers {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 5px;
+    border: 1px solid #6b7280;
+    background: linear-gradient(to top, #505050 1%, #f8fafc 50%);
+    color: #7e22ce;
+    width: 3.5rem;
+    height: 3.5rem;
+    font-size: 2.25rem;
+    font-family: "Libre Baskerville";
+    font-weight: 400;
+    border-radius: 50%;
+}
+
+.previousWinningNumbers:first-child {
+    margin-left: 5px;
+}
 
 .rightNavSmallScreen {
     display: none;
@@ -153,20 +183,14 @@
     display: none;
 }
 
-.previousWinningNumbers {
-    margin-right: 5px;
-}
 
-.previousWinningNumbers:first-child {
-    margin-left: 5px;
-}
-
-.previousDraw {
-    width: 300px;
-}
 
 
 @media (max-width: 960px) {
+    .nav {
+        height: 10px;
+    }
+
     .rightNav {
         display: none;
     }

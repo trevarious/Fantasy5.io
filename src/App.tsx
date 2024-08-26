@@ -1,15 +1,18 @@
+// src/App.tsx
 import React from 'react';
 import NavUpdate from "./components/nav/NavUpdate"
 import Ticket from './components/ticket/Ticket';
-import { Web3Provider } from './components/web3/Web3'; // Import the Web3Provider
+import { Web3Provider } from '../src/components/web3/Web3';
+import { AppProvider } from '../src/components/app-context/AppContext';
 
 const App: React.FC = () => {
   return (
     <Web3Provider>
-      <NavUpdate />
-      {/* Other components that need Web3 context */}
-      <Ticket />
-    </Web3Provider >
+      <AppProvider>
+        <NavUpdate />
+        <Ticket />
+      </AppProvider>
+    </Web3Provider>
   );
 };
 

@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useWeb3 } from '../web3/Web3';
+import { useAppContext } from "../app-context/AppContext";
 import styles from './Ticket.module.css';
 import ether from "../../assets/eth.png";
 import quickPick from "../../assets/quick-pick.png";
@@ -15,25 +16,8 @@ const generateQuickPick = (numbers: number[]) => {
 
 const Ticket = () => {
     const { userAccount, contract, web3 } = useWeb3();
-    const [entranceFee, setEntranceFee] = useState<any>(null);
     const [selectedNumbers, setSelectedNumbers] = useState<number[]>([]);
-
-    useEffect(() => {
-        const fetchLotteryDetails = async () => {
-            try {
-                if (contract) {
-                    const returns = await contract.methods.getLotteryDetails().call();
-                    console.log("Ticket.jsx entranceFee: ", returns[3]);
-                    setEntranceFee(web3?.utils.fromWei(returns[3], "ether"));
-                } else {
-                    console.log("Ticket.jsx: Contract not yet initialized.");
-                }
-            } catch (error) {
-                console.error("There was an error retrieving LotteryStats(): ", error);
-            }
-        }
-        fetchLotteryDetails();
-    }, [contract]);
+    const results = useAppContext();
 
     const submitTicket = async () => {
         if (contract && web3 && userAccount) {
@@ -43,7 +27,7 @@ const Ticket = () => {
                     return;
                 }
 
-                const value = web3.utils.toWei(entranceFee, "ether");
+                const value = web3.utils.toWei(results.entranceFee, "ether");
 
                 // Sort the numbers and ensure they're uint8
                 const sortedNumbers = selectedNumbers.sort((a, b) => a - b).map(num => Number(num));
@@ -86,7 +70,7 @@ const Ticket = () => {
     };
 
     return (
-        <div className={styles.container}>
+        <div style={{ visibility: contract ? "visible" : "hidden" }} className={styles.container} >
             <div className={styles.ticket}>
                 <h1 className={styles.title}>PLAY</h1>
                 <div className={styles.numbersgrid}>
@@ -112,7 +96,7 @@ const Ticket = () => {
                         onClick={submitTicket}
                         disabled={selectedNumbers.length !== 5}
                     >
-                        Submit<span className={styles.spanSubmitTicketButton}>({entranceFee} ETH<img src={ether} className={styles.ether}></img>)</span>
+                        Submit<span className={styles.spanSubmitTicketButton}>({results.entranceFee} ETH<img src={ether} className={styles.ether}></img>)</span>
                     </button>
 
                     <button
@@ -123,7 +107,7 @@ const Ticket = () => {
                     </button>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

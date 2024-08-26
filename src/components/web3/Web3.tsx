@@ -14,7 +14,7 @@ interface Web3ContextProps {
     userAccount: UserAccountState | null | any;
     error: string | null;
     web3: Web3 | null;
-    contract: any; // Using 'any' here, but consider typing it properly if you can
+    contract: any;
     initializeWeb3: () => void;
     entranceFee: string | number | undefined;
 }

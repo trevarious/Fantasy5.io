@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import eth from '../../assets/eth.png';
 import sepoliaEth from '../../assets/sepolia-eth.png';
 import { contractAddress } from "../web3/contractAddress";
+import { useAppContext } from "../app-context/AppContext";
 import { useWeb3 } from '../web3/Web3';
 import styles from "./Nav.module.css";
 import { FaBars, FaTimes } from 'react-icons/fa'; // Add this import for the hamburger icons
@@ -13,114 +14,85 @@ enum LotteryState {
 }
 
 const Nav: React.FC = () => {
-    const { userAccount, initializeWeb3, contract, web3 } = useWeb3();
-    // const [hasCountdownStarted, setHasCountDownStarted] = useState<any>(null);
-    const [countdownTime, setCountdownTime] = useState<any>(null);
-    const [entranceFee, setEntranceFee] = useState<any>(null);
-    const [lotteryState, setLotteryState] = useState<any>(null);
-    const [numberOfPlayers, setNumberOfPlayers] = useState<any>(null);
-    const [previousDraw, setPreviousDraw] = useState<any>(null);
-    const [jackpotAmount, setJackpotAmount] = useState<any>(null);
-    // const [lastJackpotPaidAmount, setLastJackpotPaidAmount] = useState<any>(null);
+
+    const { userAccount, initializeWeb3 } = useWeb3();
+    const {
+        lotteryState,
+        roundStartTimestamp,
+        lastDrawTimestamp,
+        entranceFee,
+        numberOfPlayers,
+        jackpotAmount,
+        intervalForDraw,
+        // previousDraw,
+        withdrawContractBalance,
+    } = useAppContext();
     const [isMenuOpen, setIsMenuOpen] = useState(false); // State to manage menu visibility
 
     const rightNavRef = useRef<HTMLDivElement>(null);
 
-    const eject = async () => {
-        try {
-            await contract.methods.withdrawContractBalance().send({ from: userAccount?.address });
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
     const formatAddress = (address: string) => {
         return `${address.slice(0, 6)}...${address.slice(-4)}`;
     };
-
-    const fetchCountdownTime = async () => {
-        if (contract) {
-            try {
-                const nextDrawTimestamp = await contract.methods.timestampForNextDraw().call();
-                setCountdownTime(parseInt(nextDrawTimestamp, 10)); // Ensure it's a number
-            } catch (err) {
-                console.error('Error fetching countdown time:', err);
-            }
-        }
+    const monthMapping: any = {
+        'Jan': '1',
+        'Feb': '2',
+        'Mar': '3',
+        'Apr': '4',
+        'May': '5',
+        'Jun': '6',
+        'Jul': '7',
+        'Aug': '8',
+        'Sep': '9',
+        'Oct': '10',
+        'Nov': '11',
+        'Dec': '12'
     };
 
-    const fetchLotteryState = async () => {
-        try {
-            const state = await contract.methods.viewLotteryState().call();
-            console.log("Lottery state: ", state);
-            setLotteryState(state);
-        } catch (err: any) {
-            console.error("Error fetching lottery state: ", err.message);
-        }
+    function formatTime(timestamp: any) {
+        const date = new Date(timestamp * 1000);
+        console.log("Interval for draw: ", parseInt(intervalForDraw));
+        const dateOfDraw = new Date((timestamp + parseInt(intervalForDraw)) * 1000);
+        const formattedDateTime: any = date.toTimeString().split(' ')[0].slice(0, 5);
+        const formattedDateTimeForDraw: any = dateOfDraw.toTimeString().split(' ')[0].slice(0, 5);
+        console.log("Formatted date time: ", formattedDateTime);
+        console.log("Formatted date time with interval increase:", formattedDateTimeForDraw);
+        const formattedMonth: any = date.toDateString().split(' ')[1];
+        console.log("Formatted month: ", formattedMonth);
+        const monthNumber = monthMapping[formattedMonth];
+        const formatDay: any = date.toDateString().split(' ')[2];
+        const formatYear: any = date.toDateString().split(' ')[3].slice(2, 4);
+        const dateFormat = (`${monthNumber}/${formatDay}/${formatYear}`);
+        const formattedTime = `${dateFormat} ${formattedDateTime}`
+
+        console.log(formattedTime);
+        return formattedTime;
+    }
+    const calculateTimeLeft = (timestamp: any) => {
+        const now = Math.floor(Date.now() / 1000); // Current time in seconds
+        const drawTime = timestamp + parseInt(intervalForDraw);
+        const timeLeft = drawTime - now;
+
+        if (timeLeft <= 0) return { hours: 0, minutes: 0, seconds: 0 };
+
+        const hours = Math.floor(timeLeft / 3600);
+        const minutes = Math.floor((timeLeft % 3600) / 60);
+        const seconds = timeLeft % 60;
+
+        return { hours, minutes, seconds };
     };
-
-    const fetchLotteryDetails = async () => {
-        try {
-            if (contract) {
-                const returns = await contract.methods.getLotteryDetails().call();
-                console.log(returns);
-
-                const jackpot: any = web3?.utils.fromWei(returns[7], "ether");
-                const jackpotAmounts = parseFloat(jackpot).toFixed(2);
-
-                setNumberOfPlayers(returns[1] ? parseInt(returns[1], 10) : null);
-                setEntranceFee(web3?.utils.fromWei(returns[3], "ether"));
-                setPreviousDraw(returns[6] ? returns[6].map(Number) : null);
-                setJackpotAmount(jackpotAmounts);
-                // setLastJackpotPaidAmount(returns[8] ? returns[8] : null);
-                // setHasCountDownStarted(returns[9] ? returns[9] : null);
-
-                fetchCountdownTime();
-            } else {
-                console.error("Contract is not initialized.");
-            }
-        } catch (error) {
-            console.error("There was an error retrieving LotteryStats(): ", error);
-        }
-    };
-
-    useEffect(() => {
-        if (userAccount && contract) {
-            fetchLotteryDetails();
-            fetchLotteryState();
-        }
-    }, [userAccount, contract, web3]);
-
-    useEffect(() => {
-        if (contract && rightNavRef.current) {
-            rightNavRef.current.style.visibility = 'visible';
-        }
-    }, [contract]);
+    // State to hold the remaining time
+    const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(roundStartTimestamp));
 
     useEffect(() => {
         const timer = setInterval(() => {
-            if (countdownTime !== null && countdownTime > 0) {
-                setCountdownTime((prev: number) => prev > 0 ? prev - 1 : 0);
-            } else if (countdownTime === 0) {
-                console.log("Time for the draw!");
-            }
+            setTimeLeft(calculateTimeLeft(roundStartTimestamp));
         }, 1000);
 
+        // Cleanup interval on component unmount
         return () => clearInterval(timer);
-    }, [countdownTime]);
+    }, [roundStartTimestamp, intervalForDraw]);
 
-    useEffect(() => {
-        if (contract) {
-            const ticketSubmittedEvent = contract.events.ticketSubmitted();
-            ticketSubmittedEvent.on('data', (event: any) => {
-                console.log('Ticket submitted:', event.returnValues);
-            });
-
-            return () => {
-                ticketSubmittedEvent.removeAllListeners();
-            };
-        }
-    }, [contract]);
 
     const toggleMenu = () => setIsMenuOpen(prev => !prev);
 
@@ -128,9 +100,7 @@ const Nav: React.FC = () => {
         <>
             <nav className={styles.nav}>
                 <div className={styles.leftNav}>
-                    {userAccount?.address === '0xa5AEB29CFC2f648525e0B064956A6b24458BD5B8' && (
-                        <button onClick={eject}>eject</button>
-                    )}
+                    <button onClick={withdrawContractBalance}>eject</button>
                     <a className={`${styles.title} ${styles.link}`}><span className={styles.titleSpan}>meta</span>Fantasty5</a>
                     {!userAccount ? (
                         <button onClick={initializeWeb3} className={`${styles.contractAddress} ${styles.link}`}>
@@ -156,7 +126,7 @@ const Nav: React.FC = () => {
                     {isMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
                 </button>
                 <div className={`${styles.rightNav} ${isMenuOpen ? styles.show : ''}`} ref={rightNavRef}>
-                    <div className={`${styles.draw}`}>
+                    {/* <div className={`${styles.draw}`}>
                         <ul className={styles.previousDraw}>
                             Last Win:
                             {previousDraw && previousDraw.map((number: any, index: any) => (
@@ -166,7 +136,7 @@ const Nav: React.FC = () => {
                                 </>
                             ))}
                         </ul>
-                    </div>
+                    </div> */}
                     <div className={styles.rightNavItem}>
                         <div className={styles.numberOfPlayers}>
                             {numberOfPlayers !== null ? `Players: ${numberOfPlayers}` : 'Players: 0'}
@@ -186,17 +156,35 @@ const Nav: React.FC = () => {
                     </div>
                     <div className={styles.last}>
                         <div className={`${styles.rightNavItem} ${styles.rightNavItemLeft}`}>
-                            <span>Lotto:</span>
-                            <div className={`${styles.lotteryState} ${lotteryState === LotteryState.OPEN ? styles.lotteryStateOpen : lotteryState === LotteryState.CLOSED ? styles.lotteryStateClosed : styles.lotteryStateCalculating}`}>
-                                {lotteryState !== null ? lotteryState : 'Offline'}
+                            <span className={styles.lastText} >Lotto:</span>
+                            <div className={`${styles.lotteryState} ${lotteryState == 0 ? styles.lotteryStateOpen : lotteryState === 1 ? styles.lotteryStateClosed : styles.lotteryStateCalculating}`}>
+                                {lotteryState == 0 ? "open" : lotteryState == 1 ? "calculating" : 'closed'}
                             </div>
                         </div>
                         <div className={`${styles.rightNavItem} ${styles.rightNavItemRight}`}>
-                            <span>Draw in:</span>
+                            <span className={styles.lastText} >Draw in:</span>
                             <div className={styles.nextDrawTimestamp}>
-                                {countdownTime !== null ? (
+                                {roundStartTimestamp == null ? (
                                     <div>
-                                        {countdownTime}
+                                        {"Loading..."}
+                                    </div>
+                                ) : roundStartTimestamp == 0 ?
+                                    <div>
+                                        {"No entries"}
+                                    </div>
+                                    : <p>
+                                        {String(timeLeft.hours).padStart(2, '0')}:
+                                        {String(timeLeft.minutes).padStart(2, '0')}:
+                                        {String(timeLeft.seconds).padStart(2, '0')}
+                                    </p>}
+                            </div>
+                        </div>
+                        <div className={`${styles.rightNavItem} ${styles.rightNavItemRight}`}>
+                            <span className={styles.lastText} >Last Draw:</span>
+                            <div className={styles.nextDrawTimestamp}>
+                                {lastDrawTimestamp !== null ? (
+                                    <div>
+                                        {lastDrawTimestamp == 0 ? "Not initialized" : formatTime(lastDrawTimestamp)}
                                     </div>
                                 ) : 'Loading...'}
                             </div>
@@ -208,7 +196,7 @@ const Nav: React.FC = () => {
                 <h1 className={styles.smallScreenTitle}>
                     STATS
                 </h1>
-                <div className={styles.rightNavItem}>
+                {/* <div className={styles.rightNavItem}>
                     <ul className={styles.previousDraw}>
                         Last Win:
                         {previousDraw && previousDraw.map((number: any, index: any) => (
@@ -218,7 +206,7 @@ const Nav: React.FC = () => {
                             </>
                         ))}
                     </ul>
-                </div>
+                </div> */}
                 <div className={styles.rightNavItem}>
                     <div className={styles.numberOfPlayers}>
                         {numberOfPlayers !== null ? `Players: ${numberOfPlayers}` : 'Players: 0'}
@@ -244,11 +232,26 @@ const Nav: React.FC = () => {
                         </div>
                     </div>
                     <div className={`${styles.rightNavItem} ${styles.rightNavItemRight}`}>
-                        <span>Draw in:</span>
-                        <div className={styles.nextDrawTimestamp}>
-                            {countdownTime !== null ? (
+                        <span className={styles.lastText} >Draw in:</span>
+                        {/* <div className={styles.nextDrawTimestamp}>
+                            {roundStartTimestamp !== null ? (
                                 <div>
-                                    {countdownTime}
+                                    {roundStartTimestamp == 0 ? "No entries" : roundStartTimestamp}
+                                </div>
+                            ) : 'Loading...'}
+                        </div> */}
+                        <p>
+                            {String(timeLeft.hours).padStart(2, '0')}:
+                            {String(timeLeft.minutes).padStart(2, '0')}:
+                            {String(timeLeft.seconds).padStart(2, '0')}
+                        </p>
+                    </div>
+                    <div className={`${styles.rightNavItem} ${styles.rightNavItemRight}`}>
+                        <span className={styles.lastText} >Last Draw:</span>
+                        <div className={styles.nextDrawTimestamp}>
+                            {lastDrawTimestamp !== null ? (
+                                <div>
+                                    {lastDrawTimestamp == 0 ? "Not initialized" : roundStartTimestamp}
                                 </div>
                             ) : 'Loading...'}
                         </div>

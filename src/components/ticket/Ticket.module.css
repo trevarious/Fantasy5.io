@@ -4,6 +4,7 @@
     justify-content: center;
     height: 100vh;
 
+
 }
 
 .ticket {
@@ -11,7 +12,7 @@
     padding: 15px;
     margin: 0 auto;
     text-align: center;
-    background: #fde047;
+    background: #c084fc;
     user-select: none;
 }
 
@@ -145,4 +146,10 @@
     background-color: #065f4681;
     transform: translateX(-25px);
 
+}
+
+@media (max-width: 600px) {
+    .ticket {
+        height: 65%;
+    }
 }
