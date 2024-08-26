@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import eth from '../../assets/eth.png';
 import sepoliaEth from '../../assets/sepolia-eth.png';
+import logo from "../../assets/logo.png";
 import { contractAddress } from "../web3/contractAddress";
 import { useAppContext } from "../app-context/AppContext";
 import { useWeb3 } from '../web3/Web3';
@@ -100,8 +101,8 @@ const Nav: React.FC = () => {
         <>
             <nav className={styles.nav}>
                 <div className={styles.leftNav}>
-                    <button onClick={withdrawContractBalance}>eject</button>
-                    <a className={`${styles.title} ${styles.link}`}><span className={styles.titleSpan}>meta</span>Fantasty5</a>
+                    {/* <button onClick={withdrawContractBalance}>eject</button> */}
+                    <img className={`${styles.title} ${styles.link}`} src={logo}></img>
                     {!userAccount ? (
                         <button onClick={initializeWeb3} className={`${styles.contractAddress} ${styles.link}`}>
                             Connect Wallet
@@ -191,7 +192,7 @@ const Nav: React.FC = () => {
                         </div>
                     </div>
                 </div>
-            </nav>
+            </nav >
             <div className={`${styles.rightNavSmallScreen} ${isMenuOpen ? styles.show : ''}`}>
                 <h1 className={styles.smallScreenTitle}>
                     STATS
