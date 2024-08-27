@@ -1,7 +1,7 @@
 // src/App.tsx
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import NavUpdate from './components/nav/NavUpdate';
+import NavUpdate from './components/nav/Nav';
 import Ticket from './components/ticket/Ticket';
 import Home from './components/home/Home';
 import Instructions from './components/instructions/Instructions';
@@ -15,15 +15,15 @@ const App: React.FC = () => {
       <Web3Provider>
         <AppProvider>
           <ScrollHandler />
-          <body>
+          <div>
             <NavUpdate />
             <Routes>
-              <Route path="/Home" element={<Home />} />
-              <Route path="/Play" element={<Ticket />} />
+              <Route path="/" element={<Home />} /> {/* Default route */}
+              <Route path="/play" element={<Ticket />} />
               <Route path="/instructions" element={<Instructions />} />
               {/* Add more routes as needed */}
             </Routes>
-          </body>
+          </div>
         </AppProvider>
       </Web3Provider>
     </Router>

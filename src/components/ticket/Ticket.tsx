@@ -70,44 +70,55 @@ const Ticket = () => {
     };
 
     return (
-        <div style={{ visibility: contract ? "visible" : "hidden" }} className={styles.container} >
-            <div className={styles.ticket}>
-                <h1 className={styles.title}>PLAY</h1>
-                <div className={styles.numbersgrid}>
-                    {numbers.map(num => (
+        <>
+            <div style={{ display: contract ? "flex" : "none" }} className={styles.container} >
+                <div className={styles.ticket}>
+                    <h1 className={styles.title}>PLAY</h1>
+                    <div className={styles.numbersgrid}>
+                        {numbers.map(num => (
+                            <button
+                                key={num}
+                                className={`${styles.numberButton} ${selectedNumbers.includes(num) ? styles.selected : ''}`}
+                                onClick={() => handleNumberClick(num)}
+                            >
+                                {num}
+                            </button>
+                        ))}
+                    </div>
+                    <div className={styles.selectedNumbers}>
+                        <h2 className={styles.selectedNumbersTitle}>Selected Numbers</h2>
+                        <div className={styles.numbersList}>
+                            {selectedNumbers.sort((a, b) => a - b).join('  |  ')}
+                        </div>
+                    </div>
+                    <div className={styles.buttonsContainer}>
                         <button
-                            key={num}
-                            className={`${styles.numberButton} ${selectedNumbers.includes(num) ? styles.selected : ''}`}
-                            onClick={() => handleNumberClick(num)}
+                            className={styles.submitTicketButton}
+                            onClick={submitTicket}
+                            disabled={selectedNumbers.length !== 5}
                         >
-                            {num}
+                            Submit<span className={styles.spanSubmitTicketButton}>({results.entranceFee} ETH<img src={ether} className={styles.ether}></img>)</span>
                         </button>
-                    ))}
-                </div>
-                <div className={styles.selectedNumbers}>
-                    <h2 className={styles.selectedNumbersTitle}>Selected Numbers</h2>
-                    <div className={styles.numbersList}>
-                        {selectedNumbers.sort((a, b) => a - b).join('  |  ')}
+
+                        <button
+                            className={styles.quickPickButton}
+                            onClick={handleQuickPick}
+                        >
+                            <span><img src={quickPick} alt="qp" /></span>
+                        </button>
                     </div>
                 </div>
-                <div className={styles.buttonsContainer}>
-                    <button
-                        className={styles.submitTicketButton}
-                        onClick={submitTicket}
-                        disabled={selectedNumbers.length !== 5}
-                    >
-                        Submit<span className={styles.spanSubmitTicketButton}>({results.entranceFee} ETH<img src={ether} className={styles.ether}></img>)</span>
-                    </button>
-
-                    <button
-                        className={styles.quickPickButton}
-                        onClick={handleQuickPick}
-                    >
-                        <span><img src={quickPick} alt="qp" /></span>
-                    </button>
+            </div>
+            <div style={{ display: contract ? "none" : "flex" }} className={styles.loaderContainer}>
+                <h1>Please Connect Wallet</h1>
+                <div className={styles.loader}>
+                    <div className={styles.spinner}></div>
+                    <div className={styles.spinner}></div>
+                    <div className={styles.spinner}></div>
+                    <div className={styles.spinner}></div>
                 </div>
             </div>
-        </div >
+        </>
     );
 };
 

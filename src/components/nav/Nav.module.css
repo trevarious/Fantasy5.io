@@ -47,6 +47,12 @@
     color: #4ade80;
 }
 
+.connectButton {
+    color: white;
+    background-color: #34d3992f;
+    padding: 0.5rem;
+    font-weight: 700;
+}
 
 .rightNav {
     position: relative;
