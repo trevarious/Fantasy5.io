@@ -14,6 +14,8 @@ interface AppContextType {
     numberOfPlayers: number | null;
     jackpotAmount: string | null;
     intervalForDraw: any;
+    contract: any;
+    drawHistory: any;
     // previousDraw: number[] | null;
     withdrawContractBalance: () => void;
     refreshLotteryData: () => Promise<void>;
@@ -30,6 +32,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const [numberOfPlayers, setNumberOfPlayers] = useState<number | null>(null);
     const [jackpotAmount, setJackpotAmount] = useState<string | null>(null);
     const [intervalForDraw, setIntervalForDraw] = useState<any>(null);
+    const [drawHistory, setDrawHistory] = useState<any[]>([]); // Update state type as needed
+
     // const [previousDraw, setPreviousDraw] = useState<number[] | null>(null);
     const withdrawContractBalance = async () => {
         if (contract && web3) {
@@ -51,7 +55,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
                     contract.methods.getLotteryDetails().call(),
                     contract.methods.getCurrentDrawPlayerDetails().call()
                 ]);
-                console.log("State: ", state);
                 setLotteryState(state);
                 setEntranceFee(web3.utils.fromWei(lotteryDetails[0], "ether"));
                 setNumberOfPlayers(parseInt(playerDetails[1], 10));
@@ -68,6 +71,52 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             }
         }
     };
+    const getDrawHistory = async () => {
+        try {
+            // Fetch the current draw ID
+            const drawIdString = await contract.methods.drawId().call();
+            const drawId = parseInt(drawIdString, 10);
+
+            if (contract && drawId) {
+                const numPreviousDraws = 10;
+                const historyPromises: Promise<any>[] = [];
+
+                for (let i = 0; i < numPreviousDraws; i++) {
+                    const currentDrawId = drawId - i - 1;
+                    if (currentDrawId < 1) break;
+
+                    historyPromises.push(
+                        contract.methods.getRoundHistory(currentDrawId).call()
+                            .then((result: any) => {
+                                // Ensure proper conversion from BigInt (if needed)
+                                const timestamp = parseInt(result[0], 10);
+                                const winningNumbers = result[1].map(Number);
+                                const prizeTiers = result[2].map(Number);
+                                const winnerTiers = result[3].map(Number);
+
+                                return {
+                                    timestamp,
+                                    winningNumbers,
+                                    prizeTiers,
+                                    winnerTiers
+                                };
+                            })
+                            .catch((error: any) => ({
+                                error: error.message
+                            }))
+                    );
+                }
+
+                const historyResults = await Promise.all(historyPromises);
+                console.log("History details for past draws: ", historyResults);
+                setDrawHistory(historyResults as any);
+            } else {
+                alert("Contract not initialized or drawId not set.");
+            }
+        } catch (error: any) {
+            console.error("Error fetching draw history. ERROR: ", error.message);
+        }
+    };
 
     useEffect(() => {
         if (contract && web3) {
@@ -78,6 +127,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             return () => clearInterval(intervalId);
         }
     }, [contract, web3]);
+    useEffect(() => {
+        if (contract && web3) {
+            getDrawHistory();
+        }
+
+    }, [contract, web3]);
+
 
     return (
         <AppContext.Provider value={{
@@ -88,6 +144,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             numberOfPlayers,
             jackpotAmount,
             intervalForDraw,
+            contract,
+            drawHistory,
             // previousDraw,
             withdrawContractBalance,
             refreshLotteryData,
