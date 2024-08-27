@@ -74,7 +74,7 @@ export const Web3Provider: React.FC<{ children: ReactNode }> = ({ children }) =>
             } else {
                 console.warn('Non-Ethereum browser detected.');
                 setError('Non-Ethereum browser detected.');
-                alert('Non-Ethereum browser detected. Please switch the the sepolia test net.');
+                alert('Non-Ethereum browser detected. Please download a web3 wallet such as MetaMask and switch to sepolia network.');
             }
         } catch (err) {
             console.error('Web3 initialization error:', err);
