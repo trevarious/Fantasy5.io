@@ -49,13 +49,20 @@
 
 
 .rightNav {
+    position: relative;
     flex: 1;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    visibility: visible;
+    opacity: 0;
+    transform: translateX(800px);
+    transition: opacity 400ms ease, transform 450ms ease 50ms;
+}
 
+.rightNav.show {
+    opacity: 1;
+    transform: translateX(0);
 }
 
 .rightNavItem {
@@ -107,6 +114,7 @@
     display: flex;
     flex-direction: row;
     width: 100%;
+    height: 500px;
     align-items: center;
     justify-content: center;
     list-style: none;
@@ -150,10 +158,24 @@
     display: block;
 }
 
-.menuButton {
+.menuButtonSmallScreen {
     display: none;
 }
 
+.menuButtonLargeScreen {
+    position: absolute;
+    right: 1.5rem;
+    transition: right 500ms ease, background-color 250ms ease, color 500ms ease;
+    background-color: #34d3997b;
+    color: white;
+    margin-right: 1rem;
+}
+
+.menuButtonLargeScreen.show {
+    right: 50%;
+    background-color: #d33434a4;
+    color: #c084fc;
+}
 
 
 
@@ -177,12 +199,16 @@
         display: none;
     }
 
-    .menuButton {
+    .menuButtonSmallScreen {
         display: block;
         background: #022c22;
         color: #a7f3d0;
         border: 1px solid #34d3997b;
 
+    }
+
+    .menuButtonLargeScreen {
+        display: none;
     }
 
     .rightNavSmallScreen {

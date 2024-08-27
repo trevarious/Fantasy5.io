@@ -53,7 +53,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
                 const [state, lotteryDetails, playerDetails] = await Promise.all([
                     contract.methods.viewLotteryState().call(),
                     contract.methods.getLotteryDetails().call(),
-                    contract.methods.getCurrentDrawPlayerDetails().call()
+                    contract.methods.getCurrentDrawPlayerDetails().call(),
+
                 ]);
                 setLotteryState(state);
                 setEntranceFee(web3.utils.fromWei(lotteryDetails[0], "ether"));
@@ -66,6 +67,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
                 setRoundStartTimestamp(parseInt(lotteryDetails[3], 10));
                 setLastDrawTimestamp(parseInt(lotteryDetails[4], 10));
                 setIntervalForDraw(lotteryDetails[5]);
+
             } catch (error) {
                 console.error("Error refreshing lottery data:", error);
             }

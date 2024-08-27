@@ -7,6 +7,8 @@ import { useAppContext } from "../app-context/AppContext";
 import { useWeb3 } from '../web3/Web3';
 import styles from "./Nav.module.css";
 import { FaBars, FaTimes } from 'react-icons/fa'; // Add this import for the hamburger icons
+import { Link } from 'react-router-dom';
+import { BiArrowFromRight, BiArrowToRight } from "react-icons/bi";
 
 
 
@@ -20,10 +22,11 @@ const Nav: React.FC = () => {
         numberOfPlayers,
         jackpotAmount,
         intervalForDraw,
-        // previousDraw,
+        // drawHistory,
         // withdrawContractBalance,
     } = useAppContext();
-    const [isMenuOpen, setIsMenuOpen] = useState(false); // State to manage menu visibility
+    const [isMenuOpenSmallScreen, setIsMenuOpenSmallScreens] = useState<boolean | null>(false); // State to manage menu visibility
+    const [isMenuOpenLargeScreen, setIsMenuOpenLargeScreens] = useState<boolean | null>(false);
 
     const rightNavRef = useRef<HTMLDivElement>(null);
 
@@ -90,7 +93,9 @@ const Nav: React.FC = () => {
     }, [roundStartTimestamp, intervalForDraw]);
 
 
-    const toggleMenu = () => setIsMenuOpen(prev => !prev);
+    const toggleMenuSmallScreen = () => setIsMenuOpenSmallScreens(prev => !prev);
+    const toggleMenuLargeScreen = () => setIsMenuOpenLargeScreens(prev => !prev);
+
 
     return (
         <>
@@ -99,7 +104,7 @@ const Nav: React.FC = () => {
                     {/* <button onClick={withdrawContractBalance}>eject</button> */}
                     <img className={`${styles.title} ${styles.link}`} src={logo}></img>
                     {!userAccount ? (
-                        <button onClick={initializeWeb3} className={`${styles.contractAddress} ${styles.link}`}>
+                        <button onClick={initializeWeb3} className={`${styles.connectButton}`}>
                             Connect Wallet
                         </button>
                     ) : (
@@ -118,14 +123,21 @@ const Nav: React.FC = () => {
                         </div>
                     )}
                 </div>
-                <button className={styles.menuButton} onClick={toggleMenu}>
-                    {isMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+                <button className={styles.menuButtonSmallScreen} onClick={toggleMenuSmallScreen}>
+                    {isMenuOpenSmallScreen ? <FaTimes size={22} /> : <FaBars size={22} />}
                 </button>
-                <div className={`${styles.rightNav} ${isMenuOpen ? styles.show : ''}`} ref={rightNavRef}>
+                <button className={`${styles.menuButtonLargeScreen} ${isMenuOpenLargeScreen ? styles.show : ''}`} onClick={toggleMenuLargeScreen}>
+                    {isMenuOpenLargeScreen ? <BiArrowToRight size={32} /> : <BiArrowFromRight size={32} />}
+                </button>
+
+                <div className={`${styles.rightNav} ${isMenuOpenLargeScreen ? styles.show : ''}`} ref={rightNavRef}>
+                    <Link to="/Home">Home</Link>
+                    <Link to="/Play">Play</Link>
+                    <Link to="/instructions">Instructions</Link>
                     {/* <div className={`${styles.draw}`}>
                         <ul className={styles.previousDraw}>
                             Last Win:
-                            {previousDraw && previousDraw.map((number: any, index: any) => (
+                            {drawHistory && drawHistory[drawHistory.length - 1].map((number: any, index: any) => (
                                 <>
                                     <li className={styles.previousWinningNumbers} key={index}>{` ${number}`}</li>
                                     <br></br>
@@ -133,16 +145,18 @@ const Nav: React.FC = () => {
                             ))}
                         </ul>
                     </div> */}
-                    <div className={styles.rightNavItem}>
-                        <div className={styles.numberOfPlayers}>
-                            {numberOfPlayers !== null ? `Players: ${numberOfPlayers}` : 'Players: 0'}
+                    <div className={`${styles.last}`}>
+                        <div className={styles.rightNavItem}>
+                            <div className={styles.numberOfPlayers}>
+                                {numberOfPlayers !== null ? `Players: ${numberOfPlayers}` : 'Players: 0'}
+                            </div>
                         </div>
-                    </div>
-                    <div className={styles.rightNavItem}>
-                        <div className={styles.jackpot}>
-                            {jackpotAmount ? `Jackpot: ${jackpotAmount}` : 'Offline'}
+                        <div className={styles.rightNavItem}>
+                            <div className={styles.jackpot}>
+                                {jackpotAmount ? `Jackpot: ${jackpotAmount}` : 'Offline'}
+                            </div>
+                            <img src={eth} className={styles.ethImg} alt="ETH" />
                         </div>
-                        <img src={eth} className={styles.ethImg} alt="ETH" />
                     </div>
                     <div className={styles.last}>
                         <div className={`${styles.rightNavItem} ${styles.rightNavItemLeft}`}>
@@ -182,7 +196,7 @@ const Nav: React.FC = () => {
                     </div>
                 </div>
             </nav >
-            <div className={`${styles.rightNavSmallScreen} ${isMenuOpen ? styles.show : ''}`}>
+            <div className={`${styles.rightNavSmallScreen} ${isMenuOpenSmallScreen ? styles.show : ''}`}>
                 <h1 className={styles.smallScreenTitle}>
                     STATS
                 </h1>
