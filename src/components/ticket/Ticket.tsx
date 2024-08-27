@@ -87,7 +87,7 @@ const Ticket = () => {
                 <div className={styles.selectedNumbers}>
                     <h2 className={styles.selectedNumbersTitle}>Selected Numbers</h2>
                     <div className={styles.numbersList}>
-                        {selectedNumbers.sort((a, b) => a - b).join(', ')}
+                        {selectedNumbers.sort((a, b) => a - b).join('  |  ')}
                     </div>
                 </div>
                 <div className={styles.buttonsContainer}>

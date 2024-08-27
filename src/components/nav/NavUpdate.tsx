@@ -8,11 +8,7 @@ import { useWeb3 } from '../web3/Web3';
 import styles from "./Nav.module.css";
 import { FaBars, FaTimes } from 'react-icons/fa'; // Add this import for the hamburger icons
 
-enum LotteryState {
-    OPEN,
-    CALCULATING,
-    CLOSED
-}
+
 
 const Nav: React.FC = () => {
 
@@ -21,7 +17,6 @@ const Nav: React.FC = () => {
         lotteryState,
         roundStartTimestamp,
         lastDrawTimestamp,
-        entranceFee,
         numberOfPlayers,
         jackpotAmount,
         intervalForDraw,
@@ -144,12 +139,6 @@ const Nav: React.FC = () => {
                         </div>
                     </div>
                     <div className={styles.rightNavItem}>
-                        <div className={styles.entranceFee}>
-                            {entranceFee ? `Price: ${entranceFee}` : 'Offline'}
-                        </div>
-                        <img src={eth} className={styles.ethImg} alt="ETH" />
-                    </div>
-                    <div className={styles.rightNavItem}>
                         <div className={styles.jackpot}>
                             {jackpotAmount ? `Jackpot: ${jackpotAmount}` : 'Offline'}
                         </div>
@@ -214,12 +203,6 @@ const Nav: React.FC = () => {
                     </div>
                 </div>
                 <div className={styles.rightNavItem}>
-                    <div className={styles.entranceFee}>
-                        {entranceFee ? `Price: ${entranceFee}` : 'Offline'}
-                    </div>
-                    <img src={eth} className={styles.ethImg} alt="ETH" />
-                </div>
-                <div className={styles.rightNavItem}>
                     <div className={styles.jackpot}>
                         {jackpotAmount ? `Jackpot: ${jackpotAmount}` : 'Offline'}
                     </div>
@@ -227,32 +210,35 @@ const Nav: React.FC = () => {
                 </div>
                 <div className={styles.last}>
                     <div className={`${styles.rightNavItem} ${styles.rightNavItemLeft}`}>
-                        <span>Lotto:</span>
-                        <div className={`${styles.lotteryState} ${lotteryState === LotteryState.OPEN ? styles.lotteryStateOpen : lotteryState === LotteryState.CLOSED ? styles.lotteryStateClosed : styles.lotteryStateCalculating}`}>
-                            {lotteryState !== null ? lotteryState : 'Offline'}
+                        <span className={styles.lastText} >Lotto:</span>
+                        <div className={`${styles.lotteryState} ${lotteryState == 0 ? styles.lotteryStateOpen : lotteryState === 1 ? styles.lotteryStateClosed : styles.lotteryStateCalculating}`}>
+                            {lotteryState == 0 ? "open" : lotteryState == 1 ? "calculating" : 'closed'}
                         </div>
                     </div>
                     <div className={`${styles.rightNavItem} ${styles.rightNavItemRight}`}>
                         <span className={styles.lastText} >Draw in:</span>
-                        {/* <div className={styles.nextDrawTimestamp}>
-                            {roundStartTimestamp !== null ? (
+                        <div className={styles.nextDrawTimestamp}>
+                            {roundStartTimestamp == null ? (
                                 <div>
-                                    {roundStartTimestamp == 0 ? "No entries" : roundStartTimestamp}
+                                    {"Loading..."}
                                 </div>
-                            ) : 'Loading...'}
-                        </div> */}
-                        <p>
-                            {String(timeLeft.hours).padStart(2, '0')}:
-                            {String(timeLeft.minutes).padStart(2, '0')}:
-                            {String(timeLeft.seconds).padStart(2, '0')}
-                        </p>
+                            ) : roundStartTimestamp == 0 ?
+                                <div>
+                                    {"No entries"}
+                                </div>
+                                : <p>
+                                    {String(timeLeft.hours).padStart(2, '0')}:
+                                    {String(timeLeft.minutes).padStart(2, '0')}:
+                                    {String(timeLeft.seconds).padStart(2, '0')}
+                                </p>}
+                        </div>
                     </div>
                     <div className={`${styles.rightNavItem} ${styles.rightNavItemRight}`}>
                         <span className={styles.lastText} >Last Draw:</span>
                         <div className={styles.nextDrawTimestamp}>
                             {lastDrawTimestamp !== null ? (
                                 <div>
-                                    {lastDrawTimestamp == 0 ? "Not initialized" : roundStartTimestamp}
+                                    {lastDrawTimestamp == 0 ? "Not initialized" : formatTime(lastDrawTimestamp)}
                                 </div>
                             ) : 'Loading...'}
                         </div>

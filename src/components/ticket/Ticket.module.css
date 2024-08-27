@@ -80,6 +80,7 @@
     font-weight: 700;
     font-family: "Libre Baskerville";
     min-height: 7.5rem;
+
     color: #047857;
 }
 
@@ -145,6 +146,6 @@
 @media (max-width: 600px) {
     .ticket {
         position: absolute;
-        top: 3rem;
+        top: 4rem;
     }
 }
