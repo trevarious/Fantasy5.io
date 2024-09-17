@@ -3,8 +3,10 @@ import styles from "./Instructions.module.css"; // Assuming you have a CSS modul
 const Instructions: React.FC = () => {
     return (
         <div className={styles.container}>
+            <div className={styles.introContainer}>
             <h1>Instructions</h1>
             <p>Welcome to the Instructions page. Here you will find guidelines and tips on how to use the application.</p>
+            </div>
             <ul>
                 <li>Step 1: Connect your wallet.</li>
                 <li>Step 2: Choose a lottery option.</li>
