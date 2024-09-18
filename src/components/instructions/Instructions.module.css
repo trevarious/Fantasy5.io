@@ -22,6 +22,12 @@
     margin-bottom: 15px;
     background: rgba(255, 0, 0, 0.453);
 }
+.hide {
+    display: none;
+}
+.show {
+    display: flex;
+}
 
 h1 {
     font-size: 3rem;
